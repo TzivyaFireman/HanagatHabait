@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Institution {
+  id               String   @id @default(uuid()) 
+  name             String                
+  address          String
+  employees        Employee[]
+  createdAt        DateTime @default(now())
+
+  cleaningContact  Contact? @relation(name: "CleaningContact", fields: [cleaningContactId], references: [id])
+  cleaningContactId String? @unique
+
+  financeContact   Contact? @relation(name: "FinanceContact", fields: [financeContactId], references: [id])
+  financeContactId String? @unique
+
+  cleaningTaskTemplates CleaningTaskTemplate[]
+}
+
+model Contact {
+  id    String @id @default(uuid())
+  name  String
+  phone String
+  email String
+
+  cleaningInstitution Institution? @relation(name: "CleaningContact")
+  financeInstitution  Institution? @relation(name: "FinanceContact")
+  employees Employee[]
+}
+
+model Employee {
+  id           String        @id @default(uuid())
+  name         String
+  id_number    String
+  email        String        @unique
+  phoneNumber  String?
+  institution  Institution?  @relation(fields: [institutionId], references: [id])
+  institutionId String?
+  createdAt    DateTime      @default(now())
+  salary       Float
+  contact      Contact?      @relation(fields: [contactId], references: [id])
+  contactId    String?
+  
+  assignments  CleaningTaskAssignment[]
+}
+
+enum Day {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+}
+
+model CleaningTaskTemplate {
+  id              String       @id @default(uuid())
+  institution     Institution  @relation(fields: [institutionId], references: [id])
+  institutionId   String
+  description     String
+  days           Day[]
+  location       String
+  employeesNeeded Int
+
+  tasks CleaningTask[]
+}
+
+model CleaningTask {
+  id           String      @id @default(uuid())
+  template     CleaningTaskTemplate @relation(fields: [templateId], references: [id])
+  templateId   String
+  date         DateTime
+  employees    CleaningTaskAssignment[]
+  completed    Boolean @default(false)
+}
+
+model CleaningTaskAssignment {
+  id          String    @id @default(uuid())
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+  employeeId  String
+  task        CleaningTask @relation(fields: [taskId], references: [id])
+  taskId      String
+}
