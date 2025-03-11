@@ -7,7 +7,7 @@ import {
     deleteInstitutionInDb
 } from '../repositories/institutionsRepository';
 
-export const getAllInstitutions = async (req: Request, res: Response): Promise<Response | void> => {
+export const getAllInstitutions = async (req: Request, res: Response): Promise<void> => {
     try {
         const institutions = await findAllInstitutions();
         res.status(200).json(institutions);
@@ -16,7 +16,7 @@ export const getAllInstitutions = async (req: Request, res: Response): Promise<R
     }
 };
 
-export const getInstitutionById = async (req: Request, res: Response): Promise<Response | void> => {
+export const getInstitutionById = async (req: Request, res: Response): Promise<any> => {
     try {
         const institution = await findInstitutionById(req.params.id);
         if (!institution) {
@@ -35,16 +35,8 @@ export const createInstitution = async (req: Request, res: Response): Promise<vo
         const newInstitution = await createInstitutionInDb({
             name,
             address,
-            cleaningContact: {
-                name: cleaningContact.name,
-                phone: cleaningContact.phone,
-                email: cleaningContact.email
-            },
-            accountingContact: {
-                name: accountingContact.name,
-                phone: accountingContact.phone,
-                email: accountingContact.email
-            },
+            cleaningContact,
+            accountingContact,
             cleaningSpec
         });
         res.status(201).json(newInstitution);
@@ -53,23 +45,15 @@ export const createInstitution = async (req: Request, res: Response): Promise<vo
     }
 };
 
-export const updateInstitution = async (req: Request, res: Response): Promise<Response | void> => {
+export const updateInstitution = async (req: Request, res: Response): Promise<any> => {
     const { name, address, cleaningContact, accountingContact, cleaningSpec } = req.body;
 
     try {
         const updatedInstitution = await updateInstitutionInDb(req.params.id, {
             name,
             address,
-            cleaningContact: {
-                name: cleaningContact.name,
-                phone: cleaningContact.phone,
-                email: cleaningContact.email
-            },
-            accountingContact: {
-                name: accountingContact.name,
-                phone: accountingContact.phone,
-                email: accountingContact.email
-            },
+            cleaningContact,
+            accountingContact,
             cleaningSpec
         });
 
@@ -83,7 +67,7 @@ export const updateInstitution = async (req: Request, res: Response): Promise<Re
     }
 };
 
-export const deleteInstitution = async (req: Request, res: Response): Promise<Response | void> => {
+export const deleteInstitution = async (req: Request, res: Response): Promise<any> => {
     try {
         const deletedInstitution = await deleteInstitutionInDb(req.params.id);
         if (!deletedInstitution) {
