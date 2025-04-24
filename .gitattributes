@@ -1,0 +1,6 @@
+# save LF in all code file
+* text=auto
+
+*.sql text eol=lf
+*.toml text eol=lf
+*.prisma text eol=lf
