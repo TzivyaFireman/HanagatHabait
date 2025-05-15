@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import institutionRouter from "./routes/institutionsRoutes"
+import cleaningSpecificationsRouter from "./routes/cleaningSpecificationsRoutes"
 import dotenv from 'dotenv';
 dotenv.config();
 const app = express();
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(institutionRouter);
+app.use(cleaningSpecificationsRouter);
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });

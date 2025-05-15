@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Day } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const findCleaningSpecifications = async (institutionId?: string) => {
     return await prisma.cleaningSpecification.findMany({
-        where: institutionId ? { institution_id: institutionId } : {},
+        where: institutionId ? { institutionId } : {},
         include: {
             assignedEmployees: true,
             institution: true
@@ -13,8 +13,8 @@ export const findCleaningSpecifications = async (institutionId?: string) => {
 };
 
 export const createCleaningSpecificationInDb = async (data: {
-    task_id: string;
-    day_of_week: string;
+    task_id: string; // יכנס לשדה id
+    day_of_week: Day;
     institution_id: string;
     assigned_employees?: string[];
     completed: boolean;
@@ -23,8 +23,8 @@ export const createCleaningSpecificationInDb = async (data: {
 }) => {
     return await prisma.cleaningSpecification.create({
         data: {
-            task_id: data.task_id,
-            day_of_week: data.day_of_week,
+            id: data.task_id, // שים לב כאן
+            dayOfWeek: data.day_of_week,
             institution: { connect: { id: data.institution_id } },
             assignedEmployees: data.assigned_employees
                 ? {
@@ -32,7 +32,7 @@ export const createCleaningSpecificationInDb = async (data: {
                   }
                 : undefined,
             completed: data.completed,
-            performance_quality: data.performance_quality,
+            performanceQuality: data.performance_quality,
             notes: data.notes
         },
         include: {
@@ -46,7 +46,7 @@ export const updateCleaningSpecificationInDb = async (
     id: string,
     data: {
         task_id?: string;
-        day_of_week?: string;
+        day_of_week?: Day;
         institution_id?: string;
         assigned_employees?: string[];
         completed?: boolean;
@@ -57,8 +57,8 @@ export const updateCleaningSpecificationInDb = async (
     return await prisma.cleaningSpecification.update({
         where: { id },
         data: {
-            task_id: data.task_id,
-            day_of_week: data.day_of_week,
+            id: data.task_id,
+            dayOfWeek: data.day_of_week,
             institution: data.institution_id
                 ? { connect: { id: data.institution_id } }
                 : undefined,
@@ -68,7 +68,7 @@ export const updateCleaningSpecificationInDb = async (
                   }
                 : undefined,
             completed: data.completed,
-            performance_quality: data.performance_quality,
+            performanceQuality: data.performance_quality,
             notes: data.notes
         },
         include: {
