@@ -6,7 +6,6 @@ import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar';
 import 'primeicons/primeicons.css';
 import DecodeToken from '../DecodeToken'
-
 import './Nav.css'
 import logo from './logo/רזי הנהגת הבית.mp4'
 import { Link } from 'react-router-dom';
@@ -109,7 +108,7 @@ export default function TemplateDemo() {
         }
     ];
 
-    const navBarlogo = <video alt="logo" src={logo} height="50" className="mr-2" autoPlay muted loop  onClick={()=>{navigate('/')}}></video>;
+    const navBarlogo = <video alt="logo" src={logo} height="100" className="mr-2" autoPlay muted loop  onClick={()=>{navigate('/')}}></video>;
     // const searchInput = (
     //     <InputText type="text" className="w-8rem sm:w-auto" class="search" />
     // )
